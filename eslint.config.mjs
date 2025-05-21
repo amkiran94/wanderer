@@ -1,31 +1,34 @@
 import js from "@eslint/js";
 import globals from "globals";
 import pluginReact from "eslint-plugin-react";
-import pluginPrettier from "eslint-plugin-prettier";
-import { defineConfig } from "eslint/config";
+import { defineConfig } from "eslint-define-config";
 
 export default defineConfig([
+  js.configs.recommended,
   {
-    files: ["**/*.{js,mjs,cjs,jsx}"],
-    plugins: { js, prettier: pluginPrettier },
-    extends: [
-      "js/recommended",
-      "plugin:prettier/recommended", // Add Prettier's recommended config
-    ],
-  },
-  {
-    files: ["**/*.{js,mjs,cjs,jsx}"],
-    languageOptions: { globals: globals.browser },
-  },
-  pluginReact.configs.flat.recommended,
-  {
-    files: ["**/*.jsx"],
+    plugins: {
+      react: pluginReact,
+    },
+    languageOptions: {
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+        ecmaFeatures: {
+          jsx: true, // ✅ Enable JSX parsing
+        },
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.jest,
+      },
+    },
     rules: {
-      "no-console": "warn",
-      "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
-      "react/prop-types": "off",
-      "react/jsx-no-undef": "error",
-      "prettier/prettier": "error", // Make Prettier errors show up as ESLint errors
+      // your custom rules here
+    },
+    settings: {
+      react: {
+        version: "detect", // auto-detects the React version
+      },
     },
   },
 ]);
